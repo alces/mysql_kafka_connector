@@ -12,3 +12,15 @@
       name:
       - net-tools
       - mariadb-server
+
+  - name: Put MySQL config
+    copy:
+      src: server.cnf
+      dest: /etc/my.cnf.d/
+    register: my_cnf
+
+  - name: Start MySQL service
+    service:
+      name: mariadb
+      enabled: yes
+      state: "{{ 'restarted' if my_cnf.changed else 'started' }}"
