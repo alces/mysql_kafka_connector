@@ -11,8 +11,8 @@ variable "mysql_addr" {
 }
 
 variable "mysql_ami" {
-  # RHEL 7.5 in eu-west-1
-  default = "ami-7c491f05"
+  # CentOS 7 in eu-west-1
+  default = "ami-3b261642"
 }
 
 variable "mysql_disk_size" {

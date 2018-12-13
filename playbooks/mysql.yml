@@ -1,0 +1,14 @@
+- name: Install MySQL server and Kafka connector
+  hosts: all
+  gather_facts: no
+  tasks:
+  - name: Wait for server
+    wait_for_connection:
+      timeout: 360
+    become: no
+
+  - name: Install packages
+    yum:
+      name:
+      - net-tools
+      - mariadb-server

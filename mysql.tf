@@ -11,13 +11,18 @@ resource "aws_instance" "mysql_instance" {
   private_ip = "${var.mysql_addr}"
   associate_public_ip_address = true
 
-  tags {
-    Name = "mysql-${var.aws_zone}"
-    OS = "redhat"
-    Project = "${var.project_name}"
+  provisioner "local-exec" {
+    command = "ansible-playbook -b -i ${aws_instance.mysql_instance.private_ip}, -u centos -v playbooks/mysql.yml"
   }
 
   root_block_device {
     volume_size = "${var.mysql_disk_size}"
   }
+ 
+  tags {
+    Name = "mysql-${var.aws_zone}"
+    Project = "${var.project_name}"
+  }
+
+
 }
