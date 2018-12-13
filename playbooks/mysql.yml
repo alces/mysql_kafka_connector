@@ -34,3 +34,32 @@
       host: '%'
       password: "{{ connector_pass }}"
       priv: '*.*:SELECT,RELOAD,SHOW DATABASES,REPLICATION SLAVE,REPLICATION CLIENT'
+
+  - name: Get list of installed connectors
+    uri:
+      url: "{{ connector_url }}"
+      return_content: yes
+    register: conn_response
+
+  - name: Parse connectors list
+    set_fact:
+      conn_list: "{{ conn_response.content | from_json }}"
+
+  - name: Add MySQL connector
+    uri:
+      url: "{{ connector_url }}"
+      body:
+        name: "{{ connector_name }}"
+        config:
+          connector.class: io.debezium.connector.mysql.MySqlConnector
+          database.hostname: "{{ inventory_hostname }}"
+          database.port: 3306
+          database.user: "{{ connector_user }}"
+          database.password: "{{ connector_pass }}"
+          database.server.name: aws-test
+          database.history.kafka.topic: mysql_schema_history
+          database.history.kafka.bootstrap.servers: "{{ kafka_servers }}"
+      body_format: json
+      method: POST
+      status_code: 201
+    when: connector_name not in conn_list
