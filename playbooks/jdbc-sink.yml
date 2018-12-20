@@ -35,7 +35,9 @@
         config:
           auto.create: true
           connector.class: io.confluent.connect.jdbc.JdbcSinkConnector
-          connection.url: "jdbc:mysql://{{ inventory_hostname }}:3306/{{ sink_database }}?user={{ sink_user }}&password={{ sink_pass }}"
+          connection.url: "jdbc:mysql://{{ inventory_hostname }}:3306/{{ sink_database }}"
+          connection.user: "{{ sink_user }}"
+          connection.password: "{{ sink_pass }}"
           tasks.max: 1
           topics: "{{ sink_topic }}"
       body_format: json

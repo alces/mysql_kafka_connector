@@ -9,4 +9,9 @@ sink_connector: sink_test01
 sink_database: sink_test01
 sink_user: suser
 sink_pass: ass4inkuser
-sink_topic: "{{ connector_server }}.connector_test01.ships"
+src_connector: src_test01
+src_database: connector_test01
+src_user: sourser
+src_pass: ass4rcuser
+src_topic_prefix: jdbc01-
+sink_topic: "{{ src_topic_prefix }}ships"

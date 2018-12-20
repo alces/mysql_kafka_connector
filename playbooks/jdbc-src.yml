@@ -1,0 +1,48 @@
+- name: Install JDBC source connector
+  hosts: all
+  gather_facts: no
+  vars_files:
+  - variables.yml
+  tasks:
+  - name: Add src database
+    mysql_db:
+      login_user: root
+      name: "{{ src_database }}"
+
+  - name: Add src user
+    mysql_user:
+      login_user: root
+      name: "{{ src_user }}"
+      host: '%'
+      password: "{{ src_pass }}"
+      priv: "{{ src_database }}.*:SELECT"
+
+  - name: Get list of installed connectors
+    uri:
+      url: "{{ connector_url }}"
+      return_content: yes
+    register: conn_response
+
+  - name: Parse connectors list
+    set_fact:
+      conn_list: "{{ conn_response.content | from_json }}"
+
+  - name: Add sourceconnector
+    uri:
+      url: "{{ connector_url }}"
+      body:
+        name: "{{ src_connector }}"
+        config:
+          auto.create: true
+          connector.class: io.confluent.connect.jdbc.JdbcSourceConnector
+          connection.url: "jdbc:mysql://{{ inventory_hostname }}:3306/{{ src_database }}"
+          connection.user: "{{ src_user }}"
+          connection.password: "{{ src_pass }}"
+          incrementing.column.name: id
+          mode: incrementing
+          tasks.max: 1
+          topic.prefix: "{{ src_topic_prefix }}"
+      body_format: json
+      method: POST
+      status_code: 201
+    when: src_connector not in conn_list
