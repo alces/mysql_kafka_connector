@@ -1,0 +1,44 @@
+- name: Install JDBC sink connector
+  hosts: all
+  gather_facts: no
+  vars_files:
+  - variables.yml
+  tasks:
+  - name: Add sink database
+    mysql_db:
+      login_user: root
+      name: "{{ sink_database }}"
+
+  - name: Add sink user
+    mysql_user:
+      login_user: root
+      name: "{{ sink_user }}"
+      host: '%'
+      password: "{{ sink_pass }}"
+      priv: "{{ sink_database }}.*:ALL"
+
+  - name: Get list of installed connectors
+    uri:
+      url: "{{ connector_url }}"
+      return_content: yes
+    register: conn_response
+
+  - name: Parse connectors list
+    set_fact:
+      conn_list: "{{ conn_response.content | from_json }}"
+
+  - name: Add Sink connector
+    uri:
+      url: "{{ connector_url }}"
+      body:
+        name: "{{ sink_connector }}"
+        config:
+          auto.create: true
+          connector.class: io.confluent.connect.jdbc.JdbcSinkConnector
+          connection.url: "jdbc:mysql://{{ inventory_hostname }}:3306/{{ sink_database }}?user={{ sink_user }}&password={{ sink_pass }}"
+          tasks.max: 1
+          topics: "{{ sink_topic }}"
+      body_format: json
+      method: POST
+      status_code: 201
+    when: sink_connector not in conn_list

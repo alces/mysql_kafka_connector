@@ -56,8 +56,8 @@
           database.port: 3306
           database.user: "{{ connector_user }}"
           database.password: "{{ connector_pass }}"
-          database.server.name: aws-test
-          database.history.kafka.topic: mysql_schema_history
+          database.server.name: "{{ connector_server }}"
+          database.history.kafka.topic: "{{ connector_server }}_schema_history"
           database.history.kafka.bootstrap.servers: "{{ kafka_servers }}"
       body_format: json
       method: POST
