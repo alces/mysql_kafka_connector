@@ -38,8 +38,12 @@
           connection.url: "jdbc:mysql://{{ inventory_hostname }}:3306/{{ sink_database }}"
           connection.user: "{{ sink_user }}"
           connection.password: "{{ sink_pass }}"
+          key.converter: "{{ convertor_class }}"
+          key.converter.schema.registry.url: "{{ registry_url }}"
           tasks.max: 1
           topics: "{{ sink_topic }}"
+          value.converter: "{{ convertor_class }}"
+          value.converter.schema.registry.url: "{{ registry_url }}"
       body_format: json
       method: POST
       status_code: 201

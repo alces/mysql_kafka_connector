@@ -39,9 +39,13 @@
           connection.user: "{{ src_user }}"
           connection.password: "{{ src_pass }}"
           incrementing.column.name: id
+          key.converter: "{{ convertor_class }}"
+          key.converter.schema.registry.url: "{{ registry_url }}"
           mode: incrementing
           tasks.max: 1
           topic.prefix: "{{ src_topic_prefix }}"
+          value.converter: "{{ convertor_class }}"
+          value.converter.schema.registry.url: "{{ registry_url }}"
       body_format: json
       method: POST
       status_code: 201
