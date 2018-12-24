@@ -4,19 +4,6 @@
   vars_files:
   - variables.yml
   tasks:
-  - name: Add sink database
-    mysql_db:
-      login_user: root
-      name: "{{ sink_database }}"
-
-  - name: Add sink user
-    mysql_user:
-      login_user: root
-      name: "{{ sink_user }}"
-      host: '%'
-      password: "{{ sink_pass }}"
-      priv: "{{ sink_database }}.*:ALL"
-
   - name: Get list of installed connectors
     uri:
       url: "{{ connector_url }}"

@@ -4,19 +4,6 @@
   vars_files:
   - variables.yml
   tasks:
-  - name: Add src database
-    mysql_db:
-      login_user: root
-      name: "{{ src_database }}"
-
-  - name: Add src user
-    mysql_user:
-      login_user: root
-      name: "{{ src_user }}"
-      host: '%'
-      password: "{{ src_pass }}"
-      priv: "{{ src_database }}.*:SELECT"
-
   - name: Get list of installed connectors
     uri:
       url: "{{ connector_url }}"

@@ -2,14 +2,6 @@ variable "aws_region" {
   default = "eu-west-1"
 }
 
-variable "aws_zone" {
-  default = "eu-west-1a"
-}
-
-variable "mysql_addr" {
-  default = "10.0.11.30"
-}
-
 variable "mysql_ami" {
   # CentOS 7 in eu-west-1
   default = "ami-3b261642"
@@ -39,6 +31,17 @@ variable "ssh_key_pair" {
   default = "azalesny"
 }
 
-variable "subnet_id" {
-  default = "subnet-06cef1a4ee0bc2098"
+variable "subnets" {
+  default = [
+    {
+      id = "subnet-06cef1a4ee0bc2098",
+      addr = "10.0.11.30",
+      zone = "eu-west-1a"
+    },
+    {
+      id = "subnet-01cdbe652fbde5c4a",
+      addr = "10.0.12.30",
+      zone = "eu-west-1b"
+    }
+  ]
 }

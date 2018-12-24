@@ -1,4 +1,4 @@
-- name: Install MySQL server and Kafka connector
+- name: Install MySQL server
   hosts: all
   gather_facts: no
   vars_files:
@@ -35,31 +35,26 @@
       password: "{{ connector_pass }}"
       priv: '*.*:SELECT,RELOAD,SHOW DATABASES,REPLICATION SLAVE,REPLICATION CLIENT'
 
-  - name: Get list of installed connectors
-    uri:
-      url: "{{ connector_url }}"
-      return_content: yes
-    register: conn_response
+  - name: Add sink and src databases
+    mysql_db:
+      login_user: root
+      name: "{{ item }}"
+    with_items:
+    - "{{ sink_database }}"
+    - "{{ src_database }}"
 
-  - name: Parse connectors list
-    set_fact:
-      conn_list: "{{ conn_response.content | from_json }}"
+  - name: Add sink user
+    mysql_user:
+      login_user: root
+      name: "{{ sink_user }}"
+      host: '%'
+      password: "{{ sink_pass }}"
+      priv: "{{ sink_database }}.*:ALL"
 
-  - name: Add MySQL connector
-    uri:
-      url: "{{ connector_url }}"
-      body:
-        name: "{{ connector_name }}"
-        config:
-          connector.class: io.debezium.connector.mysql.MySqlConnector
-          database.hostname: "{{ inventory_hostname }}"
-          database.port: 3306
-          database.user: "{{ connector_user }}"
-          database.password: "{{ connector_pass }}"
-          database.server.name: "{{ connector_server }}"
-          database.history.kafka.topic: "{{ connector_server }}_schema_history"
-          database.history.kafka.bootstrap.servers: "{{ kafka_servers }}"
-      body_format: json
-      method: POST
-      status_code: 201
-    when: connector_name not in conn_list
+  - name: Add src user
+    mysql_user:
+      login_user: root
+      name: "{{ src_user }}"
+      host: '%'
+      password: "{{ src_pass }}"
+      priv: "{{ src_database }}.*:SELECT"
