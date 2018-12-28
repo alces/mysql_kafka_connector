@@ -30,6 +30,7 @@
 
   - name: Add connector user
     mysql_user:
+      login_user: root
       name: "{{ connector_user }}"
       host: '%'
       password: "{{ connector_pass }}"

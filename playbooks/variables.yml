@@ -8,11 +8,11 @@ convertor_class: io.confluent.connect.avro.AvroConverter
 kafka_servers: "10.0.11.21:9092,10.0.11.22:9092,10.0.11.23:9092"
 registry_url: http://localhost:8081
 sink_connector: sink_test02
-sink_database: sink_test01
+sink_database: sink_db01
 sink_user: suser
 sink_pass: ass4inkuser
 src_connector: src_test02
-src_database: connector_test01
+src_database: src_db01
 src_user: sourser
 src_pass: ass4rcuser
 src_topic_prefix: jdbc02_
