@@ -1,4 +1,5 @@
 - name: Install MySQL server
+  become: yes
   hosts: all
   gather_facts: no
   vars_files:
@@ -17,9 +18,9 @@
       - MySQL-python
 
   - name: Put MySQL config
-    copy:
-      src: server.cnf
-      dest: /etc/my.cnf.d/
+    template:
+      src: server.cnf.j2
+      dest: /etc/my.cnf.d/server.cnf
     register: my_cnf
 
   - name: Start MySQL service
