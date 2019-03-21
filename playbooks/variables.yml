@@ -1,19 +1,19 @@
-connector_addr: 10.0.11.24
-connector_name: mysql_test04
-connector_server: aws04
-connector_user: debezium
-connector_pass: ass4ebezium
-connector_url: "http://{{ connector_addr }}:8083/connectors"
+connector_addr: ip-10-0-14-24.eu-west-1.compute.internal
+connector_name: mysql_test01
+connector_server: aws01
+connector_user: kafka
+connector_pass: ass4afka
+connector_url: "https://{{ connector_addr }}:8483/connectors"
 convertor_class: io.confluent.connect.avro.AvroConverter
-kafka_servers: "10.0.11.21:9092,10.0.11.22:9092,10.0.11.23:9092"
-registry_url: http://localhost:8081
-sink_connector: sink_test02
+kafka_servers: "SSL://ip-10-0-14-21.eu-west-1.compute.internal:9093,SSL://ip-10-0-14-22.eu-west-1.compute.internal:9093,SSL://ip-10-0-14-23.eu-west-1.compute.internal:9093"
+registry_url: https://ip-10-0-14-24.eu-west-1.compute.internal:8481,https://ip-10-0-14-25.eu-west-1.compute.internal:8481
+sink_connector: sink_test01
 sink_database: sink_db01
 sink_user: suser
 sink_pass: ass4inkuser
-src_connector: src_test02
+src_connector: src_test01
 src_database: src_db01
 src_user: sourser
 src_pass: ass4rcuser
-src_topic_prefix: jdbc02_
+src_topic_prefix: jdbc01_
 sink_topic: "{{ src_topic_prefix }}ships"

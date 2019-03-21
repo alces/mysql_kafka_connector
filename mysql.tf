@@ -3,17 +3,16 @@ provider "aws" {
 }
 
 resource "aws_instance" "mysql_instance" {
-  count = 2
   ami = "${var.mysql_ami}"
   instance_type = "${var.mysql_instance_type}"
   key_name = "${var.ssh_key_pair}"
   vpc_security_group_ids = ["${var.security_groups}"]
-  subnet_id = "${lookup(var.subnets[count.index], "id")}"
-  private_ip = "${lookup(var.subnets[count.index], "addr")}"
+  subnet_id = "${var.subnet_id}"
+  private_ip = "${var.ip_addr}"
   associate_public_ip_address = true
 
   provisioner "local-exec" {
-    command = "ansible-playbook -b -i ${lookup(var.subnets[count.index], "addr")}, -u centos -v playbooks/mysql.yml"
+    command = "ansible-playbook -b -i ${var.ip_addr}, -u centos -v playbooks/mysql.yml"
   }
 
   root_block_device {
@@ -21,7 +20,7 @@ resource "aws_instance" "mysql_instance" {
   }
  
   tags {
-    Name = "mysql-${lookup(var.subnets[count.index], "zone")}"
+    Name = "mysql-ssl01"
     Project = "${var.project_name}"
   }
 
