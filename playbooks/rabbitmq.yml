@@ -30,9 +30,27 @@
     shell: "rabbitmqctl -q list_users | awk '{print $1}'"
     register: users_list
 
-  - name: Add connector user
-    command: "rabbitmqctl add_user {{ connector_user }} {{ connector_pass }}"
+  - block:
+    - name: Add connector user
+      command: "rabbitmqctl add_user {{ connector_user }} {{ connector_pass }}"
+
+    - name: Set permissions for connector user
+      command: "rabbitmqctl set_permissions {{ connector_user }} .* .* .*"
     when: connector_user not in users_list.stdout_lines
 
-  - name: Set permissions for connector user
-    command: "rabbitmqctl set_permissions {{ connector_user }} .* .* .*"
+  - name: Install pip
+    easy_install:
+      name: pip
+
+  - name: Install pika
+    pip:
+      name: pika
+
+  - name: Add test scripts
+    copy:
+      src: "rmq_{{ item }}.py"
+      dest: /usr/local/bin/
+      mode: 0755
+    with_items:
+    - send
+    - receive
