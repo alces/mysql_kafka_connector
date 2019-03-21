@@ -1,0 +1,38 @@
+- name: Install RabbitMQ server
+  become: yes
+  hosts: all
+  gather_facts: no
+  vars_files:
+  - variables.yml
+  tasks:
+  - name: Wait for server
+    wait_for_connection:
+      timeout: 360
+    become: no
+
+  - name: Install EPEL repo
+    yum:
+      name: epel-release
+
+  - name: Install packages
+    yum:
+      name:
+      - net-tools
+      - rabbitmq-server
+
+  - name: Start rabbitmq server
+    service:
+      name: rabbitmq-server
+      enabled: yes
+      state: started
+
+  - name: List rabbitmq users
+    shell: "rabbitmqctl -q list_users | awk '{print $1}'"
+    register: users_list
+
+  - name: Add connector user
+    command: "rabbitmqctl add_user {{ connector_user }} {{ connector_pass }}"
+    when: connector_user not in users_list.stdout_lines
+
+  - name: Set permissions for connector user
+    command: "rabbitmqctl set_permissions {{ connector_user }} .* .* .*"
