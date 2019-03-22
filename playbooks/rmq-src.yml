@@ -1,0 +1,46 @@
+- name: Install RabbitMQ source connector
+  hosts: all
+  gather_facts: no
+  vars_files:
+  - variables.yml
+  vars:
+    my_conn_name: rmq_src01
+    my_conn_url: "{{ connector_url }}/{{ my_conn_name }}"
+  tasks:
+  - name: Get list of installed connectors
+    uri:
+      url: "{{ connector_url }}"
+      return_content: yes
+      validate_certs: no
+    register: conn_response
+
+  - name: Parse connectors list
+    set_fact:
+      conn_list: "{{ conn_response.content | from_json }}"
+
+  - name: Delete existing connector
+    uri:
+      url: "{{ my_conn_url }}"
+      method: DELETE
+      status_code: 204
+      validate_certs: no
+    when: my_conn_name in conn_list
+
+  - name: Add sourceconnector
+    uri:
+      url: "{{ connector_url }}"
+      body:
+        name: "{{ my_conn_name }}"
+        config:
+          connector.class: com.github.jcustenborder.kafka.connect.rabbitmq.RabbitMQSourceConnector
+          kafka.topic: rmq_src01
+          rabbitmq.host: "{{ inventory_hostname }}"
+          rabbitmq.queue: rmq_src01
+          rabbitmq.username: "{{ connector_user }}"
+          rabbitmq.password: "{{ connector_pass }}"
+          tasks.max: 1
+      body_format: json
+      method: POST
+      status_code: 201
+      validate_certs: no
+
