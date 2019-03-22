@@ -33,12 +33,15 @@
         name: "{{ my_conn_name }}"
         config:
           connector.class: com.github.jcustenborder.kafka.connect.rabbitmq.RabbitMQSourceConnector
-          kafka.topic: rmq_src01
+          kafka.topic: rmq_src03
           rabbitmq.host: "{{ inventory_hostname }}"
           rabbitmq.queue: rmq_src01
           rabbitmq.username: "{{ connector_user }}"
           rabbitmq.password: "{{ connector_pass }}"
           tasks.max: 1
+          transforms: tran
+          transforms.tran.type: com.github.jcustenborder.kafka.connect.rabbitmq.ExtractHeader$Key
+          transforms.tran.header.name: ts
       body_format: json
       method: POST
       status_code: 201
