@@ -43,7 +43,7 @@
       command: "rabbitmqctl set_permissions {{ connector_user }} .* .* .*"
     when: connector_user not in users_list.stdout_lines
 
-  - name: List rabbitmq plusins
+  - name: List rabbitmq plugins
     shell: "rabbitmq-plugins list | fgrep -q '[E*] rabbitmq_jms_topic_exchange'"
     ignore_errors: yes
     register: jms_plugin_enabled
@@ -51,6 +51,15 @@
   - name: Enable JMS plugin
     command: rabbitmq-plugins enable rabbitmq_jms_topic_exchange
     when: jms_plugin_enabled.rc != 0
+
+  - name: List rabbitmq plugins
+    shell: "rabbitmq-plugins list | fgrep -q '[E*] rabbitmq_mqtt'"
+    ignore_errors: yes
+    register: mqtt_plugin_enabled
+
+  - name: Enable MQTT plugin
+    command: rabbitmq-plugins enable rabbitmq_mqtt
+    when: mqtt_plugin_enabled.rc != 0
 
   - name: Install pip
     easy_install:
