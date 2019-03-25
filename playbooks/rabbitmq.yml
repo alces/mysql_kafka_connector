@@ -10,9 +10,14 @@
       timeout: 360
     become: no
 
-  - name: Install EPEL repo
+  - name: Install erlang
     yum:
-      name: epel-release
+      name: https://packagecloud.io/rabbitmq/erlang/packages/el/7/erlang-21.3.2-1.el7.x86_64.rpm/download.rpm
+
+  - name: Add bintray repository
+    copy:
+      src: rabbitmq.repo
+      dest: /etc/yum.repos.d/
 
   - name: Install packages
     yum:
