@@ -35,7 +35,7 @@
           connector.class: com.datamountaineer.streamreactor.connect.jms.sink.JMSSinkConnector
           connect.jms.kcql: "INSERT INTO jms_sink01 SELECT * FROM jms_sink01 WITHTYPE QUEUE"
           connect.jms.initial.context.factory: com.sun.jndi.fscontext.RefFSContextFactory
-          connect.jms.url: file:/usr/share/java/kafka-connect-jms
+          connect.jms.url: file:/etc/kafka/jms-connector/bindings/aws_test
           connect.jms.username: "{{ connector_user }}"
           connect.jms.password: "{{ connector_pass }}"
           connect.jms.connection.factory: ConnectionFactory
