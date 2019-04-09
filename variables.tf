@@ -16,7 +16,7 @@ variable "mysql_disk_size" {
 }
 
 variable "mysql_instance_type" {
-  default = "m5.large"
+  default = "m1.small"
 }
 
 variable "security_groups" {
@@ -37,4 +37,8 @@ variable "ssh_key_pair" {
 
 variable "subnet_id" {
   default = "subnet-02045665e7ed3e0ae"
+}
+
+variable "vpc_id" {
+  default = "vpc-04689dd278ff0eb46"
 }
