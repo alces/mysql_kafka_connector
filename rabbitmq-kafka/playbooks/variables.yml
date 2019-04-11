@@ -1,0 +1,8 @@
+connector_addr: ip-10-0-14-24.eu-west-1.compute.internal
+connector_url: "https://{{ connector_addr }}:8483/connectors"
+connector_user: kafka
+connector_pass: ass4afka
+convertor_class: io.confluent.connect.avro.AvroConverter
+registry_url: https://ip-10-0-14-24.eu-west-1.compute.internal:8481,https://ip-10-0-14-25.eu-west-1.compute.internal:8481
+sink_connector: rabbit_sink01
+src_connector: rabbit_src01

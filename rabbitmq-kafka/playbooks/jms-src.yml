@@ -1,0 +1,47 @@
+- name: Install JMS source connector
+  hosts: all
+  gather_facts: no
+  vars_files:
+  - variables.yml
+  vars:
+    my_conn_name: jms_src01
+    my_conn_url: "{{ connector_url }}/{{ my_conn_name }}"
+  tasks:
+  - name: Get list of installed connectors
+    uri:
+      url: "{{ connector_url }}"
+      return_content: yes
+      validate_certs: no
+    register: conn_response
+
+  - name: Parse connectors list
+    set_fact:
+      conn_list: "{{ conn_response.content | from_json }}"
+
+  - name: Delete existing connector
+    uri:
+      url: "{{ my_conn_url }}"
+      method: DELETE
+      status_code: 204
+      validate_certs: no
+    when: my_conn_name in conn_list
+
+  - name: Add source connector
+    uri:
+      url: "{{ connector_url }}"
+      body:
+        name: "{{ my_conn_name }}"
+        config:
+          connector.class: com.datamountaineer.streamreactor.connect.jms.source.JMSSourceConnector
+          connect.jms.kcql: "INSERT INTO jms_src03 SELECT * FROM jms_sink01 WITHTYPE QUEUE WITHCONVERTER=`com.datamountaineer.streamreactor.connect.converters.source.JsonSimpleConverter`"
+          connect.jms.initial.context.factory: com.sun.jndi.fscontext.RefFSContextFactory
+          connect.jms.url: file:/etc/kafka/jms-connector/bindings/aws_test
+          connect.jms.username: "{{ connector_user }}"
+          connect.jms.password: "{{ connector_pass }}"
+          connect.jms.connection.factory: ConnectionFactory
+          tasks.max: 1
+      body_format: json
+      method: POST
+      status_code: 201
+      validate_certs: no
+

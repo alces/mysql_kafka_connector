@@ -8,6 +8,7 @@
     uri:
       url: "{{ connector_url }}"
       return_content: yes
+      validate_certs: no
     register: conn_response
 
   - name: Parse connectors list
@@ -36,4 +37,5 @@
       body_format: json
       method: POST
       status_code: 201
+      validate_certs: no
     when: src_connector not in conn_list
