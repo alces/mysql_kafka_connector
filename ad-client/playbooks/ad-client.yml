@@ -1,0 +1,30 @@
+- name: Install AD client
+  become: yes
+  hosts: all
+  gather_facts: no
+  vars_files:
+  - variables.yml
+  tasks:
+  - name: Wait for server
+    wait_for_connection:
+      timeout: 360
+    become: no
+
+  - name: Add AD DNS servers
+    lineinfile:
+      dest: /etc/dhcp/dhclient.conf
+      line: "supersede domain-name-servers {{ ', '.join(ad_dns_servers) }};"
+    register: dhclient_conf
+
+  - name: Reboot
+    reboot:
+    when: dhclient_conf.changed
+
+  - name: Install packages
+    yum:
+      name:
+      - adcli
+      - krb5-workstation
+      - realmd
+      - samba-common-tools
+      - sssd

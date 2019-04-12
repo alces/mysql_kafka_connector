@@ -1,0 +1,5 @@
+ad_dns_servers:
+- 10.0.14.218
+- 10.0.15.73
+ad_full_name: adgr.eu-west-1.compute.internal
+ad_netbios_name: "{{ ad_full_name.split('.')[0] }}"
