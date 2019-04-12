@@ -10,6 +10,15 @@
       timeout: 360
     become: no
 
+  - name: Add ssh keys
+    authorized_key:
+      user: centos
+      state: present
+      key: "{{ lookup('file', item) }}"
+    with_items:
+    - scalabrese.key
+    - tzhipa.key
+
   - name: Install erlang
     yum:
       name: https://packagecloud.io/rabbitmq/erlang/packages/el/7/erlang-21.3.2-1.el7.x86_64.rpm/download.rpm
