@@ -23,7 +23,7 @@ variable "security_groups" {
   default = [
     "sg-057e66c1c80ae762e",
     "sg-02863311c6ce41847",
-    "sg-0ae70a4dc60c7afe5"
+    "sg-0c647b241698eb5bf"
   ]
 }
 
@@ -36,7 +36,7 @@ variable "ssh_key_pair" {
 }
 
 variable "subnet_id" {
-  default = "subnet-02045665e7ed3e0ae"
+  default = "subnet-0329494d3085c557e"
 }
 
 variable "vpc_id" {
