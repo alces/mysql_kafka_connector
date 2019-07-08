@@ -2,6 +2,8 @@
 
 # Create Patroni portable distribution on bare RedHat 7
 
+PATRONI_VERSION=1.5.6
+
 # Install development tools
 sudo yum install -y gcc python-devel
 
@@ -26,7 +28,7 @@ virtualenv patroni
 
 # Build Patroni
 export PATH=/usr/pgsql-9.6/bin:$PATH
-pip install patroni[zookeeper]
+pip install patroni[zookeeper]==$PATRONI_VERSION
 
 # Make shebang portable
 for scr in patroni/bin/*
@@ -35,4 +37,4 @@ do
 done
 
 # Pack Patroni
-tar czf patroni.tgz patroni
+tar czf patroni-$PATRONI_VERSION.tgz patroni
