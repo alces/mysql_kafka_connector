@@ -2,11 +2,14 @@
 
 # Create Patroni portable distribution on bare RedHat 7
 
+# Install development tools
+sudo yum install -y gcc postgresql-devel python-devel
+
 # Add EPEL repository
 sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
-# Install PIP, compiller, and development libraries
-sudo yum install -y python2-pip gcc postgresql-devel python-devel
+# Install PIP
+sudo yum install -y python2-pip
 
 # Install virtualenv
 sudo pip install virtualenv
