@@ -1,0 +1,16 @@
+- name: Test Ansible ec2 modules to create infrastructure
+  connection: local
+  hosts: localhost
+  vars_files:
+  - vars.yml
+  tasks:
+  - name: Create subnets
+    ec2_vpc_subnet:
+      az: "{{ item.zone }}"
+      cidr: "{{ item.cidr }}"
+      region: "{{ item.zone | regex_replace('[a-z]$') }}"
+      vpc_id: "{{ vpc_id }}"
+      tags:
+        Name: "ansible-{{ item.name }}"
+        Environment: Ansible-EC2
+    with_items: "{{ subnet_list }}"

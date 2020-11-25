@@ -1,0 +1,11 @@
+subnet_list:
+- name: a-21
+  cidr: 10.0.21.0/24
+  zone: eu-west-1a
+- name: b-22
+  cidr: 10.0.22.0/24
+  zone: eu-west-1b
+- name: a-23
+  cidr: 10.0.23.0/24
+  zone: eu-west-1a
+vpc_id: "{{ lookup('env', 'AWS_VPC_ID') }}"
