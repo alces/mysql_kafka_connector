@@ -8,9 +8,27 @@
     ec2_vpc_subnet:
       az: "{{ item.zone }}"
       cidr: "{{ item.cidr }}"
-      region: "{{ item.zone | regex_replace('[a-z]$') }}"
-      vpc_id: "{{ vpc_id }}"
+      region: "{{ region }}"
       tags:
         Name: "ansible-{{ item.name }}"
         Environment: Ansible-EC2
+      vpc_id: "{{ vpc_id }}"
     with_items: "{{ subnet_list }}"
+    register: local_subnets
+
+  - name: Create security group
+    ec2_group:
+      description: Allow 10.0.0.0/16 and SSH from anywhere
+      name: allow_local_and_ssh
+      region: "{{ region }}"
+      rules:
+      - cidr_ip: 0.0.0.0/0
+        from_port: 22
+        to_port: 22
+        proto: tcp
+      - cidr_ip: 10.0.0.0/16
+        proto: all
+      tags:
+        Environment: Ansible-EC2
+      vpc_id: "{{ vpc_id }}"
+    register: local_sg

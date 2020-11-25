@@ -8,4 +8,5 @@ subnet_list:
 - name: a-23
   cidr: 10.0.23.0/24
   zone: eu-west-1a
+region: eu-west-1
 vpc_id: "{{ lookup('env', 'AWS_VPC_ID') }}"
