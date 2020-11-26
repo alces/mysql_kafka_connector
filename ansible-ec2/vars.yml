@@ -1,3 +1,12 @@
+instance_list:
+- name: a-01
+  subnet: 10.0.21.0/24
+- name: a-02
+  subnet: 10.0.21.0/24
+- name: b-01
+  subnet: 10.0.22.0/24
+- name: a-11
+  sunbet: 10.0.23.0/24
 subnet_list:
 - name: a-21
   cidr: 10.0.21.0/24

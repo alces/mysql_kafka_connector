@@ -6,6 +6,7 @@ In order to execute the code in this directory, the following should be set up:
 
 * boto
 * boto3
+* botocore
 
 ## Environment variables
 

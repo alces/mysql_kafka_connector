@@ -16,6 +16,11 @@
     with_items: "{{ subnet_list }}"
     register: local_subnets
 
+  - name: Fill dict of subnets
+    set_fact:
+      subnet_id: "{{ subnet_id | default({}) | combine({item.subnet.cidr_block: item.subnet.id}) }}"
+    with_items: "{{ local_subnets.results }}"
+
   - name: Create security group
     ec2_group:
       description: Allow 10.0.0.0/16 and SSH from anywhere
@@ -32,3 +37,17 @@
         Environment: Ansible-EC2
       vpc_id: "{{ vpc_id }}"
     register: local_sg
+
+  - name: Create instances
+    ec2_instance:
+      image_id: ami-3b261642
+      instance_type: t3.nano
+      name: "ansible-{{ item.name }}"
+      key_name: azalesny
+      region: "{{ region }}"
+      security_group: "{{ local_sg.group_id }}"
+      state: running
+      vpc_subnet_id: "{{ subnet_id[item.subnet] }}"
+      tags:
+        Environment: Ansible-EC2
+    with_items: "{{ instance_list }}"
